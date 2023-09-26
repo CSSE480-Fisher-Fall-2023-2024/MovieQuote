@@ -11,6 +11,15 @@ class MovieQuotesListPage extends StatefulWidget {
 
 class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
   final List<MovieQuote> quotes = []; // No Firebase, local data!
+  final quoteTextController = TextEditingController();
+  final movieTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    quoteTextController.dispose();
+    movieTextController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -47,6 +56,66 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
                 ))
             .toList(),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showAddQuoteDialog();
+        },
+        tooltip: "Add a Quote",
+        child: const Icon(Icons.add),
+      ),
     );
+  }
+
+  void showAddQuoteDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Create a Quote"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: quoteTextController,
+                  decoration: const InputDecoration(
+                    // hintText: "Enter your quote:",
+                    labelText: "Quote:",
+                  ),
+                ),
+                TextFormField(
+                  controller: movieTextController,
+                  decoration: const InputDecoration(
+                    // hintText: "Enter your quote:",
+                    labelText: "Movie:",
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    quotes.add(
+                      MovieQuote(
+                        quote: quoteTextController.text,
+                        movie: movieTextController.text,
+                      ),
+                    );
+                    quoteTextController.text = "";
+                    movieTextController.text = "";
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text("Submit"),
+              ),
+            ],
+          );
+        });
   }
 }
