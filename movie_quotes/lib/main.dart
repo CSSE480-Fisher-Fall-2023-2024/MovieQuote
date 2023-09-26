@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_quotes/model/movie_quote.dart';
+import 'package:movie_quotes/pages/movie_quote_detail_page.dart';
 import 'package:movie_quotes/pages/movie_quotes_list_page.dart';
 
 void main() {
@@ -11,18 +13,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Movie Quotes",
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MovieQuotesListPage(),
-    );
+        title: "Movie Quotes",
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        // home: const MovieQuotesListPage(),
+        home: MovieQuoteDetailPage(MovieQuote(
+          quote:
+              "Hello. My name is Inigo Montoya. You killed my father. Prepare to die.",
+          movie: "The Princess Bride",
+        )));
   }
 }
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
