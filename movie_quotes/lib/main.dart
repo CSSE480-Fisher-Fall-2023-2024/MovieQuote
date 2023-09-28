@@ -13,16 +13,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: "Movie Quotes",
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        // home: const MovieQuotesListPage(),
-        home: MovieQuoteDetailPage(MovieQuote(
-          quote:
-              "Hello. My name is Inigo Montoya. You killed my father. Prepare to die.",
-          movie: "The Princess Bride",
-        )));
+      title: "Movie Quotes",
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MovieQuotesListPage(),
+      // home: MovieQuoteDetailPage(MovieQuote(
+      //   quote:
+      //       "Hello. My name is Inigo Montoya. You killed my father. Prepare to die.",
+      //   movie: "The Princess Bride",
+      // )),
+    );
   }
 }
