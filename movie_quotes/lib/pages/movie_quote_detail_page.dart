@@ -21,6 +21,23 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
         appBar: AppBar(
           title: const Text("Movie Quote"),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          actions: [
+            IconButton(
+              onPressed: () {
+                print("You pressed Edit");
+              },
+              icon: const Icon(Icons.edit),
+            ),
+            IconButton(
+              onPressed: () {
+                print("You pressed Delete");
+                // TODO: Actually do delete with Firestore.
+
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.delete),
+            ),
+          ],
         ),
         backgroundColor: Colors.black12,
         body: Padding(
