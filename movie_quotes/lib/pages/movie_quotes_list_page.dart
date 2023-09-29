@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_quotes/components/movie_quote_dialog.dart';
 import 'package:movie_quotes/components/movie_quote_row.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 import 'package:movie_quotes/pages/movie_quote_detail_page.dart';
@@ -51,14 +52,14 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
         children: quotes
             .map((mq) => MovieQuoteRow(
                   movieQuote: mq,
-                  onTapCallback: () {
-                    print("Show the detail page for $mq");
-                    Navigator.push(
+                  onTapCallback: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
                         return MovieQuoteDetailPage(mq);
                       }),
                     );
+                    setState(() {});
                   },
                 ))
             .toList(),
@@ -77,51 +78,21 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text("Create a Quote"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: quoteTextController,
-                  decoration: const InputDecoration(
-                    // hintText: "Enter your quote:",
-                    labelText: "Quote:",
+          quoteTextController.text = "";
+          movieTextController.text = "";
+          return MovieQuoteDialog(
+            quoteTextController: quoteTextController,
+            movieTextController: movieTextController,
+            positiveActionCallback: () {
+              setState(() {
+                quotes.add(
+                  MovieQuote(
+                    quote: quoteTextController.text,
+                    movie: movieTextController.text,
                   ),
-                ),
-                TextFormField(
-                  controller: movieTextController,
-                  decoration: const InputDecoration(
-                    // hintText: "Enter your quote:",
-                    labelText: "Movie:",
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("Cancel"),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    quotes.add(
-                      MovieQuote(
-                        quote: quoteTextController.text,
-                        movie: movieTextController.text,
-                      ),
-                    );
-                    quoteTextController.text = "";
-                    movieTextController.text = "";
-                  });
-                  Navigator.pop(context);
-                },
-                child: const Text("Submit"),
-              ),
-            ],
+                );
+              });
+            },
           );
         });
   }

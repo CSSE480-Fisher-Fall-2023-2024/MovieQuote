@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/display_card.dart';
+import 'package:movie_quotes/components/movie_quote_dialog.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 
 class MovieQuoteDetailPage extends StatefulWidget {
@@ -15,6 +16,16 @@ class MovieQuoteDetailPage extends StatefulWidget {
 }
 
 class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
+  final quoteTextController = TextEditingController();
+  final movieTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    quoteTextController.dispose();
+    movieTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +35,7 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
           actions: [
             IconButton(
               onPressed: () {
-                print("You pressed Edit");
+                showEditDialog();
               },
               icon: const Icon(Icons.edit),
             ),
@@ -64,5 +75,26 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
             ],
           ),
         ));
+  }
+
+  void showEditDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          quoteTextController.text = widget.movieQuote.quote;
+          movieTextController.text = widget.movieQuote.movie;
+
+          return MovieQuoteDialog(
+            quoteTextController: quoteTextController,
+            movieTextController: movieTextController,
+            isEditDialog: true,
+            positiveActionCallback: () {
+              setState(() {
+                widget.movieQuote.quote = quoteTextController.text;
+                widget.movieQuote.movie = movieTextController.text;
+              });
+            },
+          );
+        });
   }
 }
