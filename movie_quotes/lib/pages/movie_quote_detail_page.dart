@@ -30,9 +30,16 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
             ),
             IconButton(
               onPressed: () {
-                print("You pressed Delete");
-                // TODO: Actually do delete with Firestore.
-
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: const Text("Quote Deleted"),
+                  action: SnackBarAction(
+                    label: "Undo",
+                    onPressed: () {
+                      // Some code to undo the change.
+                      print("TODO: Later restore with quote!");
+                    },
+                  ),
+                ));
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.delete),
