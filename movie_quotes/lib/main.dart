@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 import 'package:movie_quotes/pages/movie_quote_detail_page.dart';
 import 'package:movie_quotes/pages/movie_quotes_list_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 

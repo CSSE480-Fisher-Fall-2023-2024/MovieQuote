@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/movie_quote_dialog.dart';
 import 'package:movie_quotes/components/movie_quote_row.dart';
@@ -92,6 +93,14 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
                   ),
                 );
               });
+
+              // Spike to make sure we are connected.
+              // final ref = FirebaseFirestore.instance.collection("MovieQuotes");
+              // ref.add({
+              //   "quote": quoteTextController.text,
+              //   "movie": movieTextController.text,
+              //   "lastTouched": Timestamp.now(),
+              // });
             },
           );
         });
