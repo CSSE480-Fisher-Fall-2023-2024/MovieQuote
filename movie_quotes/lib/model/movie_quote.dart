@@ -27,7 +27,12 @@ class MovieQuote {
             lastTouched: FirestoreModelUtils.getTimestampField(
                 doc, kMovieQuoteLastTouched));
 
-  // After Fall Break do the reverse of the above!
+  // Preparing this for MUCH later.
+  Map<String, Object?> toMap() => {
+        kMovieQuoteQuote: quote,
+        kMovieQuoteMovie: movie,
+        kMovieQuoteLastTouched: lastTouched,
+      };
 
   @override
   String toString() {
