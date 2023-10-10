@@ -109,7 +109,10 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
             quoteTextController: quoteTextController,
             movieTextController: movieTextController,
             positiveActionCallback: () {
-              // TODO: Use Firebase firestore to do an add.
+              MovieQuotesCollectionManager.instance.add(
+                quote: quoteTextController.text,
+                movie: movieTextController.text,
+              );
 
               // setState(() {
               //   quotes.add(

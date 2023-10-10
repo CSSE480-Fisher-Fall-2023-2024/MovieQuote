@@ -26,4 +26,16 @@ class MovieQuotesCollectionManager {
   void stopListening(StreamSubscription? subscription) {
     subscription?.cancel();
   }
+
+  void add({required String quote, required String movie}) {
+    _ref.add({
+      kMovieQuoteQuote: quote,
+      kMovieQuoteMovie: movie,
+      kMovieQuoteLastTouched: Timestamp.now(),
+    }).then((docId) {
+      print("Finished adding a document that now has id $docId");
+    }).catchError((error) {
+      print("There was an error adding the document $error");
+    });
+  }
 }
