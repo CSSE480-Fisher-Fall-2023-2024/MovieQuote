@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/movie_quote_dialog.dart';
@@ -17,27 +19,36 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
   // final List<MovieQuote> quotes = []; // No Firebase, local data!
   final quoteTextController = TextEditingController();
   final movieTextController = TextEditingController();
+  StreamSubscription? movieQuotesSubscription;
 
   @override
   void dispose() {
     quoteTextController.dispose();
     movieTextController.dispose();
+    MovieQuotesCollectionManager.instance
+        .stopListening(movieQuotesSubscription);
     super.dispose();
   }
 
   @override
   void initState() {
-    // Spike solution to see my cloud quotes here!
-    FirebaseFirestore.instance
-        .collection("MovieQuotes")
-        .snapshots()
-        .listen((QuerySnapshot querySnapshot) {
-      print(querySnapshot.docs);
-      print(querySnapshot.docs.length);
-      for (final doc in querySnapshot.docs) {
-        print(doc.data());
-      }
+    movieQuotesSubscription =
+        MovieQuotesCollectionManager.instance.startListening(() {
+      print("Got some quotes!");
+      setState(() {});
     });
+
+    // Spike solution to see my cloud quotes here!
+    // FirebaseFirestore.instance
+    //     .collection("MovieQuotes")
+    //     .snapshots()
+    //     .listen((QuerySnapshot querySnapshot) {
+    //   print(querySnapshot.docs);
+    //   print(querySnapshot.docs.length);
+    //   for (final doc in querySnapshot.docs) {
+    //     print(doc.data());
+    //   }
+    // });
 
     // quotes.add(MovieQuote(
     //   quote: "I'll be back",
