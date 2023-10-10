@@ -81,7 +81,7 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return MovieQuoteDetailPage(mq);
+                        return MovieQuoteDetailPage(mq.documentId!);
                       }),
                     );
                     setState(() {});

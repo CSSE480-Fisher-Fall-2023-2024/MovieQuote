@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/display_card.dart';
 import 'package:movie_quotes/components/movie_quote_dialog.dart';
+import 'package:movie_quotes/managers/movie_quote_document_manager.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 
 class MovieQuoteDetailPage extends StatefulWidget {
-  final MovieQuote movieQuote;
+  // final MovieQuote movieQuote;
+  final String documentId;
 
   const MovieQuoteDetailPage(
-    this.movieQuote, {
+    this.documentId, {
     super.key,
   });
 
@@ -18,11 +22,25 @@ class MovieQuoteDetailPage extends StatefulWidget {
 class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
   final quoteTextController = TextEditingController();
   final movieTextController = TextEditingController();
+  StreamSubscription? movieQuoteSubscription;
+
+  @override
+  void initState() {
+    MovieQuoteDocumentManager.instance.startListening(
+      documentId: widget.documentId,
+      observer: () {
+        print("Got the quote!");
+        setState(() {});
+      },
+    );
+    super.initState();
+  }
 
   @override
   void dispose() {
     quoteTextController.dispose();
     movieTextController.dispose();
+    MovieQuoteDocumentManager.instance.stopListening(movieQuoteSubscription);
     super.dispose();
   }
 
@@ -65,12 +83,16 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
               DisplayCard(
                 title: "Quote:",
                 iconData: Icons.format_quote_outlined,
-                cardText: widget.movieQuote.quote,
+                cardText: MovieQuoteDocumentManager
+                        .instance.latestMovieQuote?.quote ??
+                    "",
               ),
               DisplayCard(
                 title: "Movie:",
                 iconData: Icons.movie_filter_outlined,
-                cardText: widget.movieQuote.movie,
+                cardText: MovieQuoteDocumentManager
+                        .instance.latestMovieQuote?.movie ??
+                    "",
               ),
             ],
           ),
@@ -81,8 +103,10 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
     showDialog(
         context: context,
         builder: (context) {
-          quoteTextController.text = widget.movieQuote.quote;
-          movieTextController.text = widget.movieQuote.movie;
+          quoteTextController.text =
+              MovieQuoteDocumentManager.instance.latestMovieQuote?.quote ?? "";
+          movieTextController.text =
+              MovieQuoteDocumentManager.instance.latestMovieQuote?.movie ?? "";
 
           return MovieQuoteDialog(
             quoteTextController: quoteTextController,
@@ -90,8 +114,10 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
             isEditDialog: true,
             positiveActionCallback: () {
               setState(() {
-                widget.movieQuote.quote = quoteTextController.text;
-                widget.movieQuote.movie = movieTextController.text;
+                // TODO: Use Firebase Firestore to edit the quote.
+
+                // widget.movieQuote.quote = quoteTextController.text;
+                // widget.movieQuote.movie = movieTextController.text;
               });
             },
           );
