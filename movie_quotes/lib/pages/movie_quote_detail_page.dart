@@ -113,12 +113,15 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
             movieTextController: movieTextController,
             isEditDialog: true,
             positiveActionCallback: () {
-              setState(() {
-                // TODO: Use Firebase Firestore to edit the quote.
+              MovieQuoteDocumentManager.instance.update(
+                quote: quoteTextController.text,
+                movie: movieTextController.text,
+              );
 
-                // widget.movieQuote.quote = quoteTextController.text;
-                // widget.movieQuote.movie = movieTextController.text;
-              });
+              // setState(() {
+              // widget.movieQuote.quote = quoteTextController.text;
+              // widget.movieQuote.movie = movieTextController.text;
+              // });
             },
           );
         });
