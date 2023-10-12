@@ -49,4 +49,8 @@ class MovieQuoteDocumentManager {
       print("There was an error adding the document $error");
     });
   }
+
+  void delete() {
+    _ref.doc(latestMovieQuote!.documentId!).delete();
+  }
 }

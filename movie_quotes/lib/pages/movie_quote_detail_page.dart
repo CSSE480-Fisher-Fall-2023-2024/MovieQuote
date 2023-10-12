@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/display_card.dart';
 import 'package:movie_quotes/components/movie_quote_dialog.dart';
 import 'package:movie_quotes/managers/movie_quote_document_manager.dart';
+import 'package:movie_quotes/managers/movie_quotes_collection_manager.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 
 class MovieQuoteDetailPage extends StatefulWidget {
@@ -46,34 +47,47 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> actions = [];
+    if (MovieQuoteDocumentManager.instance.latestMovieQuote != null) {
+      actions = [
+        IconButton(
+          onPressed: () {
+            showEditDialog();
+          },
+          icon: const Icon(Icons.edit),
+        ),
+        IconButton(
+          onPressed: () {
+            String tempQuote =
+                MovieQuoteDocumentManager.instance.latestMovieQuote!.quote;
+            String tempMovie =
+                MovieQuoteDocumentManager.instance.latestMovieQuote!.movie;
+            MovieQuoteDocumentManager.instance.delete();
+
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text("Quote Deleted"),
+              action: SnackBarAction(
+                label: "Undo",
+                onPressed: () {
+                  MovieQuotesCollectionManager.instance.add(
+                    quote: tempQuote,
+                    movie: tempMovie,
+                  );
+                },
+              ),
+            ));
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.delete),
+        ),
+      ];
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("Movie Quote"),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            IconButton(
-              onPressed: () {
-                showEditDialog();
-              },
-              icon: const Icon(Icons.edit),
-            ),
-            IconButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: const Text("Quote Deleted"),
-                  action: SnackBarAction(
-                    label: "Undo",
-                    onPressed: () {
-                      // Some code to undo the change.
-                      print("TODO: Later restore with quote!");
-                    },
-                  ),
-                ));
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.delete),
-            ),
-          ],
+          actions: actions,
         ),
         backgroundColor: Colors.black12,
         body: Padding(
