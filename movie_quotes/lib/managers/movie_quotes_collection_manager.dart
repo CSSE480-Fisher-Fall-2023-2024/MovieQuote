@@ -14,7 +14,10 @@ class MovieQuotesCollectionManager {
             FirebaseFirestore.instance.collection(kMovieQuotesCollectionPath);
 
   StreamSubscription startListening(Function observer) {
-    return _ref.snapshots().listen((QuerySnapshot querySnapshot) {
+    return _ref
+        .orderBy(kMovieQuoteLastTouched, descending: true)
+        .snapshots()
+        .listen((QuerySnapshot querySnapshot) {
       latestMovieQuotes =
           querySnapshot.docs.map((doc) => MovieQuote.from(doc)).toList();
       observer();
