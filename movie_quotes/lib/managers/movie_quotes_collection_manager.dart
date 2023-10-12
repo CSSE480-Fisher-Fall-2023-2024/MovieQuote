@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 
 class MovieQuotesCollectionManager {
+  // Not actually need after the Firebase UI Firestore refactor
   List<MovieQuote> latestMovieQuotes = [];
+
   final CollectionReference _ref;
 
   static final instance = MovieQuotesCollectionManager._privateConstructor();
@@ -13,6 +15,7 @@ class MovieQuotesCollectionManager {
       : _ref =
             FirebaseFirestore.instance.collection(kMovieQuotesCollectionPath);
 
+  // Not actually need after the Firebase UI Firestore refactor
   StreamSubscription startListening(Function observer) {
     return _ref
         .orderBy(kMovieQuoteLastTouched, descending: true)
@@ -26,9 +29,16 @@ class MovieQuotesCollectionManager {
     });
   }
 
+  // Not actually need after the Firebase UI Firestore refactor
   void stopListening(StreamSubscription? subscription) {
     subscription?.cancel();
   }
+
+  Query<MovieQuote> get allMovieQuotesQuery =>
+      _ref.orderBy(kMovieQuoteLastTouched, descending: true).withConverter(
+            fromFirestore: (snapshot, _) => MovieQuote.from(snapshot),
+            toFirestore: (mq, _) => mq.toMap(),
+          );
 
   void add({required String quote, required String movie}) {
     _ref.add({

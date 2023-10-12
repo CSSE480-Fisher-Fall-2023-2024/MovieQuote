@@ -8,6 +8,8 @@ import 'package:movie_quotes/managers/movie_quotes_collection_manager.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 import 'package:movie_quotes/pages/movie_quote_detail_page.dart';
 
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+
 class MovieQuotesListPage extends StatefulWidget {
   const MovieQuotesListPage({super.key});
 
@@ -19,19 +21,25 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
   // final List<MovieQuote> quotes = []; // No Firebase, local data!
   final quoteTextController = TextEditingController();
   final movieTextController = TextEditingController();
+
+  // Not actually need after the Firebase UI Firestore refactor
   StreamSubscription? movieQuotesSubscription;
 
   @override
   void dispose() {
     quoteTextController.dispose();
     movieTextController.dispose();
+
+    // Not actually need after the Firebase UI Firestore refactor
     MovieQuotesCollectionManager.instance
         .stopListening(movieQuotesSubscription);
+
     super.dispose();
   }
 
   @override
   void initState() {
+    // Not actually need after the Firebase UI Firestore refactor
     movieQuotesSubscription =
         MovieQuotesCollectionManager.instance.startListening(() {
       print("Got some quotes!");
@@ -73,22 +81,40 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
         title: const Text("Movie Quotes"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: ListView(
-        children: MovieQuotesCollectionManager.instance.latestMovieQuotes
-            .map((mq) => MovieQuoteRow(
-                  movieQuote: mq,
-                  onTapCallback: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return MovieQuoteDetailPage(mq.documentId!);
-                      }),
-                    );
-                    setState(() {});
-                  },
-                ))
-            .toList(),
+      body: FirestoreListView<MovieQuote>(
+        query: MovieQuotesCollectionManager.instance.allMovieQuotesQuery,
+        itemBuilder: (context, snapshot) {
+          // Data is now typed!  The data is already a MovieQuote
+          MovieQuote mq = snapshot.data();
+          return MovieQuoteRow(
+            movieQuote: mq,
+            onTapCallback: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return MovieQuoteDetailPage(mq.documentId!);
+                }),
+              );
+            },
+          );
+        },
       ),
+      // body: ListView(
+      //   children: MovieQuotesCollectionManager.instance.latestMovieQuotes
+      //       .map((mq) => MovieQuoteRow(
+      //             movieQuote: mq,
+      //             onTapCallback: () async {
+      //               await Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(builder: (context) {
+      //                   return MovieQuoteDetailPage(mq.documentId!);
+      //                 }),
+      //               );
+      //               setState(() {});
+      //             },
+      //           ))
+      //       .toList(),
+      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showAddQuoteDialog();
