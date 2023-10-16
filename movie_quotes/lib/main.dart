@@ -26,13 +26,13 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      // home: const MovieQuotesListPage(),
+      home: const MovieQuotesListPage(),
       // home: MovieQuoteDetailPage(MovieQuote(
       //   quote:
       //       "Hello. My name is Inigo Montoya. You killed my father. Prepare to die.",
       //   movie: "The Princess Bride",
       // )),
-      home: const LoginFrontPage(),
+      // home: const LoginFrontPage(),
     );
   }
 }

@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/movie_quote_dialog.dart';
 import 'package:movie_quotes/components/movie_quote_row.dart';
+import 'package:movie_quotes/managers/auth_manager.dart';
 import 'package:movie_quotes/managers/movie_quotes_collection_manager.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
+import 'package:movie_quotes/pages/login_front_page.dart';
 import 'package:movie_quotes/pages/movie_quote_detail_page.dart';
 
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
@@ -80,6 +82,20 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
       appBar: AppBar(
         title: const Text("Movie Quotes"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: AuthManager.instance.isSignedIn
+            ? null
+            : [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginFrontPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.login),
+                )
+              ],
       ),
       body: FirestoreListView<MovieQuote>(
         query: MovieQuotesCollectionManager.instance.allMovieQuotesQuery,
@@ -117,11 +133,34 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
       // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showAddQuoteDialog();
+          if (AuthManager.instance.isSignedIn) {
+            showAddQuoteDialog();
+          } else {
+            showPleaseSignInDialog();
+          }
         },
         tooltip: "Add a Quote",
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void showPleaseSignInDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Login required"),
+          content: const Text(
+              "You must be signed in to post.  Would you like to sign in now?"),
+          actions: [
+            TextButton(
+              onPressed: () {},
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
     );
   }
 
