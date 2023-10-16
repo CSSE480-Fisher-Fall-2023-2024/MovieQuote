@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/login_button.dart';
 
@@ -19,6 +20,20 @@ class _EmailPasswordAuthPageState extends State<EmailPasswordAuthPage> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    emailTextController.text = "a@b.co";
+    passwordTextController.text = "123456";
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailTextController.dispose();
+    passwordTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -36,8 +51,10 @@ class _EmailPasswordAuthPageState extends State<EmailPasswordAuthPage> {
               TextFormField(
                 controller: emailTextController,
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "The email cannot be empty";
+                  if (value == null ||
+                      value.isEmpty ||
+                      !EmailValidator.validate(value)) {
+                    return "Please enter a valid email address";
                   }
                   return null;
                 },
