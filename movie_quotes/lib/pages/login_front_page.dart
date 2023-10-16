@@ -24,7 +24,7 @@ class _LoginFrontPageState extends State<LoginFrontPage> {
                 "Movie Quotes",
                 style: TextStyle(
                   fontSize: 56.0,
-                  // TODO: Set the font family to Rowdies
+                  fontFamily: "Rowdies",
                 ),
               ),
             ),

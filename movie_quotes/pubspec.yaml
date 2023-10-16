@@ -85,6 +85,9 @@ flutter:
     - family: Caveat
       fonts:
         - asset: assets/fonts/Caveat/static/Caveat-Regular.ttf
+    - family: Rowdies
+      fonts:
+        - asset: assets/fonts/Rowdies/Rowdies-Regular.ttf
     #     - asset: fonts/Schyler-Italic.ttf
     #       style: italic
     # - family: Trajan Pro
