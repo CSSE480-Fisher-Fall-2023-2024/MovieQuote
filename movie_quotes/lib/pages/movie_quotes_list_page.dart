@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_quotes/components/list_page_drawer.dart';
 import 'package:movie_quotes/components/movie_quote_dialog.dart';
 import 'package:movie_quotes/components/movie_quote_row.dart';
 import 'package:movie_quotes/managers/auth_manager.dart';
@@ -115,6 +116,16 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
           );
         },
       ),
+      drawer: AuthManager.instance.isSignedIn
+          ? ListPageDrawer(
+              showOnlyMineCallback: () {
+                print("Pressed on only my quotes");
+              },
+              showAllCallback: () {
+                print("Pressed on show all quotes");
+              },
+            )
+          : null,
       // body: ListView(
       //   children: MovieQuotesCollectionManager.instance.latestMovieQuotes
       //       .map((mq) => MovieQuoteRow(
