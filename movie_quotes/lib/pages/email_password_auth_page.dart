@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/login_button.dart';
+import 'package:movie_quotes/managers/auth_manager.dart';
 
 class EmailPasswordAuthPage extends StatefulWidget {
   final bool isNewUser;
@@ -88,7 +89,11 @@ class _EmailPasswordAuthPageState extends State<EmailPasswordAuthPage> {
                   if (_formKey.currentState!.validate()) {
                     // The form is valid.  Go!
                     if (widget.isNewUser) {
-                      print("TODO: Create a new user with Firebase");
+                      print("Creating a new user with Firebase");
+                      AuthManager.instance.createUserWithEmailPassword(
+                        emailAddress: emailTextController.text,
+                        password: passwordTextController.text,
+                      );
                     } else {
                       print("TODO: Log in this existing user with Firebase");
                     }
