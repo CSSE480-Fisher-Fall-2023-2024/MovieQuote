@@ -155,8 +155,21 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
               "You must be signed in to post.  Would you like to sign in now?"),
           actions: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const LoginFrontPage(),
+                  ),
+                );
+              },
+              child: const Text("Go to Login Page"),
             ),
           ],
         );
