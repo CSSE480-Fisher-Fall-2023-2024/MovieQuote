@@ -19,11 +19,16 @@ class _EmailPasswordAuthPageState extends State<EmailPasswordAuthPage> {
   final passwordTextController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  UniqueKey? _loginUniqueKey;
 
   @override
   void initState() {
     emailTextController.text = "a@b.co";
     passwordTextController.text = "123456";
+    _loginUniqueKey = AuthManager.instance.addLoginObserver(() {
+      print("Called my login observer");
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    });
     super.initState();
   }
 
@@ -31,6 +36,7 @@ class _EmailPasswordAuthPageState extends State<EmailPasswordAuthPage> {
   void dispose() {
     emailTextController.dispose();
     passwordTextController.dispose();
+    AuthManager.instance.removeObserver(_loginUniqueKey);
     super.dispose();
   }
 
@@ -89,13 +95,18 @@ class _EmailPasswordAuthPageState extends State<EmailPasswordAuthPage> {
                   if (_formKey.currentState!.validate()) {
                     // The form is valid.  Go!
                     if (widget.isNewUser) {
-                      print("Creating a new user with Firebase");
                       AuthManager.instance.createUserWithEmailPassword(
+                        context: context,
                         emailAddress: emailTextController.text,
                         password: passwordTextController.text,
                       );
                     } else {
-                      print("TODO: Log in this existing user with Firebase");
+                      print("Logging in existing user");
+                      AuthManager.instance.loginExistingUserWithEmailPassword(
+                        context: context,
+                        emailAddress: emailTextController.text,
+                        password: passwordTextController.text,
+                      );
                     }
                   } else {
                     // The form is invalid!  Maybe say something to the user.
