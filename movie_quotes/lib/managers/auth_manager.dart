@@ -26,11 +26,13 @@ class AuthManager {
 
       if (isLogin) {
         // Inform the login observers
+        print("Log in occurred");
         for (Function observer in _loginObservers.values) {
           observer();
         }
       } else if (isLogout) {
         // Inform the logout observers.
+        print("Log out occurred");
         for (Function observer in _logoutObservers.values) {
           observer();
         }
@@ -114,10 +116,9 @@ class AuthManager {
     }
   }
 
-  bool get isSignedIn => false;
-
   void signOut() {
-    print("TODO: Sign out");
+    print("Signing out");
+    FirebaseAuth.instance.signOut();
   }
 
   void _showAuthError(BuildContext context, String message) {
@@ -130,4 +131,8 @@ class AuthManager {
 
   // Develop the UI for signed in
   // bool get isSignedIn => false; // Develop the UI for not signed in
+
+  bool get isSignedIn => _user != null;
+  String get uid => _user?.uid ?? "";
+  String get email => _user?.email ?? "";
 }

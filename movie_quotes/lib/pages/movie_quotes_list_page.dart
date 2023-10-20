@@ -28,6 +28,9 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
   // Not actually need after the Firebase UI Firestore refactor
   StreamSubscription? movieQuotesSubscription;
 
+  UniqueKey? _loginUniqueKey;
+  UniqueKey? _logoutUniqueKey;
+
   @override
   void dispose() {
     quoteTextController.dispose();
@@ -36,6 +39,9 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
     // Not actually need after the Firebase UI Firestore refactor
     MovieQuotesCollectionManager.instance
         .stopListening(movieQuotesSubscription);
+
+    AuthManager.instance.removeObserver(_loginUniqueKey);
+    AuthManager.instance.removeObserver(_logoutUniqueKey);
 
     super.dispose();
   }
@@ -46,6 +52,14 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
     movieQuotesSubscription =
         MovieQuotesCollectionManager.instance.startListening(() {
       print("Got some quotes!");
+      setState(() {});
+    });
+
+    _loginUniqueKey = AuthManager.instance.addLoginObserver(() {
+      setState(() {});
+    });
+
+    _logoutUniqueKey = AuthManager.instance.addLogoutObserver(() {
       setState(() {});
     });
 
