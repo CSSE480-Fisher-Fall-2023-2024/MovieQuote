@@ -41,6 +41,9 @@ class MovieQuotesCollectionManager {
             toFirestore: (mq, _) => mq.toMap(),
           );
 
+  Query<MovieQuote> get onlyMyMovieQuotesQuery => allMovieQuotesQuery
+      .where(kMovieQuoteAuthorUid, isEqualTo: AuthManager.instance.uid);
+
   void add({required String quote, required String movie}) {
     _ref.add({
       kMovieQuoteAuthorUid: AuthManager.instance.uid,

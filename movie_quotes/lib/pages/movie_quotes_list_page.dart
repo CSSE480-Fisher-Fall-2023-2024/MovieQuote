@@ -31,6 +31,8 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
   UniqueKey? _loginUniqueKey;
   UniqueKey? _logoutUniqueKey;
 
+  bool _isShowingAllQuotes = true;
+
   @override
   void dispose() {
     quoteTextController.dispose();
@@ -60,7 +62,9 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
     });
 
     _logoutUniqueKey = AuthManager.instance.addLogoutObserver(() {
-      setState(() {});
+      setState(() {
+        _isShowingAllQuotes = false;
+      });
     });
 
     // Spike solution to see my cloud quotes here!
@@ -113,7 +117,9 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
               ],
       ),
       body: FirestoreListView<MovieQuote>(
-        query: MovieQuotesCollectionManager.instance.allMovieQuotesQuery,
+        query: _isShowingAllQuotes
+            ? MovieQuotesCollectionManager.instance.allMovieQuotesQuery
+            : MovieQuotesCollectionManager.instance.onlyMyMovieQuotesQuery,
         itemBuilder: (context, snapshot) {
           // Data is now typed!  The data is already a MovieQuote
           MovieQuote mq = snapshot.data();
@@ -134,9 +140,15 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
           ? ListPageDrawer(
               showOnlyMineCallback: () {
                 print("Pressed on only my quotes");
+                setState(() {
+                  _isShowingAllQuotes = false;
+                });
               },
               showAllCallback: () {
                 print("Pressed on show all quotes");
+                setState(() {
+                  _isShowingAllQuotes = true;
+                });
               },
             )
           : null,
