@@ -63,7 +63,7 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
 
     _logoutUniqueKey = AuthManager.instance.addLogoutObserver(() {
       setState(() {
-        _isShowingAllQuotes = false;
+        _isShowingAllQuotes = true;
       });
     });
 
