@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:movie_quotes/managers/auth_manager.dart';
 
 class ListPageDrawer extends StatelessWidget {
+  final void Function() goToProfilePageCallback;
   final void Function() showOnlyMineCallback;
   final void Function() showAllCallback;
 
   const ListPageDrawer({
     super.key,
+    required this.goToProfilePageCallback,
     required this.showOnlyMineCallback,
     required this.showAllCallback,
   });
@@ -26,16 +28,24 @@ class ListPageDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text("Show only my quotes"),
-            leading: Icon(Icons.person),
+            title: const Text("Edit Profile"),
+            leading: const Icon(Icons.account_box),
+            onTap: () {
+              Navigator.of(context).pop();
+              goToProfilePageCallback();
+            },
+          ),
+          ListTile(
+            title: const Text("Show only my quotes"),
+            leading: const Icon(Icons.person),
             onTap: () {
               Navigator.of(context).pop();
               showOnlyMineCallback();
             },
           ),
           ListTile(
-            title: Text("Show all quotes"),
-            leading: Icon(Icons.people),
+            title: const Text("Show all quotes"),
+            leading: const Icon(Icons.people),
             onTap: () {
               Navigator.of(context).pop();
               showAllCallback();

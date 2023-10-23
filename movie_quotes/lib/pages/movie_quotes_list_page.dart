@@ -12,6 +12,7 @@ import 'package:movie_quotes/pages/login_front_page.dart';
 import 'package:movie_quotes/pages/movie_quote_detail_page.dart';
 
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+import 'package:movie_quotes/pages/profile_page.dart';
 
 class MovieQuotesListPage extends StatefulWidget {
   const MovieQuotesListPage({super.key});
@@ -138,6 +139,13 @@ class _MovieQuotesListPageState extends State<MovieQuotesListPage> {
       ),
       drawer: AuthManager.instance.isSignedIn
           ? ListPageDrawer(
+              goToProfilePageCallback: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const ProfilePage(),
+                  ),
+                );
+              },
               showOnlyMineCallback: () {
                 print("Pressed on only my quotes");
                 setState(() {
