@@ -6,6 +6,8 @@ import 'package:movie_quotes/pages/movie_quotes_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+// Remember Don't use run due to network images.  Use:
+// flutter run -d chrome --web-renderer html
 void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

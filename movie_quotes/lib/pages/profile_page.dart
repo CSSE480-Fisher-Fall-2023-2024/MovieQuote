@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_quotes/components/avatar_image.dart';
 import 'package:movie_quotes/managers/auth_manager.dart';
 import 'package:movie_quotes/managers/user_data_document_manager.dart';
 
@@ -38,13 +39,20 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Edit Profile"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: const Center(
-        child: Text("Profile Page"),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text("Edit Profile"),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20.0,
+              ),
+              AvatarImage(imageUrl: UserDataDocumentManager.instance.imageUrl),
+            ],
+          ),
+        ));
   }
 }
