@@ -14,6 +14,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   StreamSubscription? _userDataSubscription;
+  final TextEditingController nameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -21,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
       documentId: AuthManager.instance.uid,
       observer: () {
         setState(() {
-          // Later... update the nameController.text
+          nameController.text = UserDataDocumentManager.instance.displayName;
           print("Display name ${UserDataDocumentManager.instance.displayName}");
           print("Image URL ${UserDataDocumentManager.instance.imageUrl}");
         });
@@ -33,11 +35,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void dispose() {
     UserDataDocumentManager.instance.stopListening(_userDataSubscription);
+    nameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    String imageUrl = UserDataDocumentManager.instance.imageUrl;
+
+    // TODO: If a new image has been uploaded use it instead!
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("Edit Profile"),
@@ -45,13 +52,65 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20.0,
-              ),
-              AvatarImage(imageUrl: UserDataDocumentManager.instance.imageUrl),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20.0,
+                ),
+                AvatarImage(imageUrl: imageUrl),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Display Name",
+                    hintText: "Enter a display name",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please add a display name";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // Everything is Valid!
+
+                          // TODO: Update the UserData on the Firestore!
+                          Navigator.of(context).pop();
+                        } else {
+                          // Something is wrong
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   const SnackBar(
+                          //     content: Text("Add a display name"),
+                          //   ),
+                          // );
+                        }
+                      },
+                      child: const Text("Save and Close"),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ));
   }
