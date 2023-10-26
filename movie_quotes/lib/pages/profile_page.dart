@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_ui_storage/firebase_ui_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/avatar_image.dart';
 import 'package:movie_quotes/managers/auth_manager.dart';
@@ -61,6 +63,29 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 AvatarImage(imageUrl: imageUrl),
                 const SizedBox(
+                  height: 4.0,
+                ),
+                UploadButton(
+                  // Start here next time:
+                  // From https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-storage/upload-button.md
+                  // and https://firebase.google.com/docs/storage/flutter/upload-files#add_file_metadata
+                  // extensions: ["jpg", "png", "jpeg"],
+                  // mimeTypes: ["image/jpeg", "image/png"],
+                  // metadata: SettableMetadata(contentType: "image/jpeg"),
+                  onError: (e, s) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString()),
+                    ),
+                  ),
+                  onUploadComplete: (ref) =>
+                      ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Upload complete: ${ref.fullPath}"),
+                    ),
+                  ),
+                  variant: ButtonVariant.outlined,
+                ),
+                const SizedBox(
                   height: 20.0,
                 ),
                 TextFormField(
@@ -93,8 +118,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           // Everything is Valid!
-
-                          // TODO: Update the UserData on the Firestore!
+                          UserDataDocumentManager.instance
+                              .update(displayName: nameController.text);
                           Navigator.of(context).pop();
                         } else {
                           // Something is wrong

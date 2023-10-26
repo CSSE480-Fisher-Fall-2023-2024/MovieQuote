@@ -29,17 +29,19 @@ class UserDataDocumentManager {
     subscription?.cancel();
   }
 
-  // void update({required String quote, required String movie}) {
-  //   _ref.doc(latestUserData!.documentId!).update({
-  //     kUserDataQuote: quote,
-  //     kUserDataMovie: movie,
-  //     kUserDataLastTouched: Timestamp.now(),
-  //   }).then((_) {
-  //     print("Finished updating the document");
-  //   }).catchError((error) {
-  //     print("There was an error adding the document $error");
-  //   });
-  // }
+  void update({required String displayName, String? imageUrl}) {
+    final updateMap = {
+      kUserDataDisplayName: displayName,
+    };
+    if (imageUrl != null) {
+      updateMap[kUserDataImageUrl] = imageUrl;
+    }
+    _ref.doc(latestUserData!.documentId!).update(updateMap).then((_) {
+      print("Finished updating the document");
+    }).catchError((error) {
+      print("There was an error adding the document $error");
+    });
+  }
 
   bool get hasDisplayName =>
       latestUserData != null && latestUserData!.displayName.isNotEmpty;

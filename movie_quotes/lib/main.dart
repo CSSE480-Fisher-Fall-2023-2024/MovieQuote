@@ -1,3 +1,5 @@
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_ui_storage/firebase_ui_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 import 'package:movie_quotes/pages/login_front_page.dart';
@@ -9,8 +11,19 @@ import 'firebase_options.dart';
 // Remember Don't use run due to network images.  Use:
 // flutter run -d chrome --web-renderer html
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // From: https://github.com/firebase/FirebaseUI-Flutter/blob/main/docs/firebase-ui-storage/getting-started.md
+  await FirebaseUIStorage.configure(
+    FirebaseUIStorageConfiguration(
+      storage: FirebaseStorage.instance,
+      uploadRoot: FirebaseStorage.instance.ref("User"),
+      namingPolicy: const UuidFileUploadNamingPolicy(),
+    ),
   );
 
   runApp(const MyApp());
