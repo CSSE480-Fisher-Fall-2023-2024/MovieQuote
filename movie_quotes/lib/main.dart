@@ -21,7 +21,7 @@ void main() async {
   await FirebaseUIStorage.configure(
     FirebaseUIStorageConfiguration(
       storage: FirebaseStorage.instance,
-      uploadRoot: FirebaseStorage.instance.ref("User"),
+      uploadRoot: FirebaseStorage.instance.ref("Users"),
       namingPolicy: const UuidFileUploadNamingPolicy(),
     ),
   );

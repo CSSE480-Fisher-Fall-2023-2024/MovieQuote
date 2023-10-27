@@ -18,6 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   StreamSubscription? _userDataSubscription;
   final TextEditingController nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  String? _updatedImageUrl;
 
   @override
   void initState() {
@@ -45,7 +46,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     String imageUrl = UserDataDocumentManager.instance.imageUrl;
 
-    // TODO: If a new image has been uploaded use it instead!
+    // If a new image has been uploaded use it instead!
+    if (_updatedImageUrl != null) {
+      imageUrl = _updatedImageUrl!;
+    }
 
     return Scaffold(
         appBar: AppBar(
@@ -71,18 +75,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   // and https://firebase.google.com/docs/storage/flutter/upload-files#add_file_metadata
                   // extensions: ["jpg", "png", "jpeg"],
                   // mimeTypes: ["image/jpeg", "image/png"],
-                  // metadata: SettableMetadata(contentType: "image/jpeg"),
+                  metadata: SettableMetadata(contentType: "image/jpeg"),
+                  extensions: ['jpg', 'png'],
+                  mimeTypes: ['image/jpeg', 'image/png'],
                   onError: (e, s) => ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(e.toString()),
                     ),
                   ),
-                  onUploadComplete: (ref) =>
-                      ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Upload complete: ${ref.fullPath}"),
-                    ),
-                  ),
+                  onUploadComplete: (ref) async {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Upload complete"),
+                      ),
+                    );
+                    _updatedImageUrl = await ref.getDownloadURL();
+                    setState(() {});
+                  },
                   variant: ButtonVariant.outlined,
                 ),
                 const SizedBox(
@@ -118,8 +127,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           // Everything is Valid!
-                          UserDataDocumentManager.instance
-                              .update(displayName: nameController.text);
+                          UserDataDocumentManager.instance.update(
+                              displayName: nameController.text,
+                              imageUrl: _updatedImageUrl);
                           Navigator.of(context).pop();
                         } else {
                           // Something is wrong
