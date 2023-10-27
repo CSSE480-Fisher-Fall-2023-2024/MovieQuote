@@ -53,4 +53,15 @@ class MovieQuoteDocumentManager {
   void delete() {
     _ref.doc(latestMovieQuote!.documentId!).delete();
   }
+
+  void clearLatest() {
+    latestMovieQuote = null;
+  }
+
+  bool get hasAuthorUid =>
+      latestMovieQuote != null && latestMovieQuote!.authorUid.isNotEmpty;
+  String get authorUid => latestMovieQuote?.authorUid ?? "";
+
+  String get movie => latestMovieQuote?.movie ?? "";
+  String get quote => latestMovieQuote?.quote ?? "";
 }

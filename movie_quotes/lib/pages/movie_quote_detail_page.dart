@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_quotes/components/author_box.dart';
 import 'package:movie_quotes/components/display_card.dart';
 import 'package:movie_quotes/components/movie_quote_dialog.dart';
 import 'package:movie_quotes/managers/auth_manager.dart';
 import 'package:movie_quotes/managers/movie_quote_document_manager.dart';
 import 'package:movie_quotes/managers/movie_quotes_collection_manager.dart';
+import 'package:movie_quotes/managers/user_data_document_manager.dart';
 import 'package:movie_quotes/model/movie_quote.dart';
 
 class MovieQuoteDetailPage extends StatefulWidget {
@@ -24,14 +26,28 @@ class MovieQuoteDetailPage extends StatefulWidget {
 class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
   final quoteTextController = TextEditingController();
   final movieTextController = TextEditingController();
-  StreamSubscription? movieQuoteSubscription;
+  StreamSubscription? _movieQuoteSubscription;
+  StreamSubscription? _userSubscription;
 
   @override
   void initState() {
+    MovieQuoteDocumentManager.instance.clearLatest();
+    UserDataDocumentManager.instance.clearLatest();
+
     MovieQuoteDocumentManager.instance.startListening(
       documentId: widget.documentId,
       observer: () {
         print("Got the quote!");
+
+        if (MovieQuoteDocumentManager.instance.hasAuthorUid) {
+          UserDataDocumentManager.instance.stopListening(_userSubscription);
+          _userSubscription = UserDataDocumentManager.instance.startListening(
+              documentId: MovieQuoteDocumentManager
+                  .instance.latestMovieQuote!.authorUid,
+              observer: () {
+                setState(() {});
+              });
+        }
         setState(() {});
       },
     );
@@ -42,7 +58,7 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
   void dispose() {
     quoteTextController.dispose();
     movieTextController.dispose();
-    MovieQuoteDocumentManager.instance.stopListening(movieQuoteSubscription);
+    MovieQuoteDocumentManager.instance.stopListening(_movieQuoteSubscription);
     super.dispose();
   }
 
@@ -101,16 +117,17 @@ class _MovieQuoteDetailPageState extends State<MovieQuoteDetailPage> {
               DisplayCard(
                 title: "Quote:",
                 iconData: Icons.format_quote_outlined,
-                cardText: MovieQuoteDocumentManager
-                        .instance.latestMovieQuote?.quote ??
-                    "",
+                cardText: MovieQuoteDocumentManager.instance.quote,
               ),
               DisplayCard(
                 title: "Movie:",
                 iconData: Icons.movie_filter_outlined,
-                cardText: MovieQuoteDocumentManager
-                        .instance.latestMovieQuote?.movie ??
-                    "",
+                cardText: MovieQuoteDocumentManager.instance.movie,
+              ),
+              const Spacer(),
+              AuthorBox(
+                name: UserDataDocumentManager.instance.displayName,
+                imageUrl: UserDataDocumentManager.instance.imageUrl,
               ),
             ],
           ),

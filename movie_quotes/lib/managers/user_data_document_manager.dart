@@ -43,6 +43,10 @@ class UserDataDocumentManager {
     });
   }
 
+  void clearLatest() {
+    latestUserData = null;
+  }
+
   bool get hasDisplayName =>
       latestUserData != null && latestUserData!.displayName.isNotEmpty;
   String get displayName => latestUserData?.displayName ?? "";
