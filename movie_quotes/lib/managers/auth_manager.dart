@@ -135,4 +135,16 @@ class AuthManager {
   bool get isSignedIn => _user != null;
   String get uid => _user?.uid ?? "";
   String get email => _user?.email ?? "";
+
+  bool get hasDisplayName =>
+      _user != null &&
+      _user!.displayName != null &&
+      _user!.displayName!.isNotEmpty;
+
+  String get displayName => _user?.displayName ?? "";
+
+  bool get hasImageUrl =>
+      _user != null && _user!.photoURL != null && _user!.photoURL!.isNotEmpty;
+
+  String get imageUrl => _user?.photoURL ?? "";
 }

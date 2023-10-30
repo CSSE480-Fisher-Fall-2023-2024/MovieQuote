@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_quotes/managers/auth_manager.dart';
 import 'package:movie_quotes/model/user_data.dart';
 
 class UserDataDocumentManager {
@@ -45,6 +47,37 @@ class UserDataDocumentManager {
 
   void clearLatest() {
     latestUserData = null;
+  }
+
+  void maybeAddNewUser() async {
+    // Get the UserData document for the current user and see if it exist!
+    // If it DOES exist do nothing
+    // If if DOES NOT exist then make it. set of a Uid as the document id.
+    DocumentSnapshot snapshot = await _ref.doc(AuthManager.instance.uid).get();
+    if (snapshot.exists) {
+      print("This UserData exist do nothing");
+    } else {
+      print("This is a new user. TODO: Make a doc");
+
+      if (AuthManager.instance.uid.isNotEmpty) {
+        createNewUser();
+      }
+    }
+  }
+
+  void createNewUser() {
+    Map<String, Object> initialUserData = {
+      kUserDataCreated: Timestamp.now(),
+    };
+    if (AuthManager.instance.hasDisplayName) {
+      initialUserData[kUserDataDisplayName] = AuthManager.instance.displayName;
+    }
+    if (AuthManager.instance.hasImageUrl) {
+      initialUserData[kUserDataImageUrl] = AuthManager.instance.imageUrl;
+    }
+    _ref.doc(AuthManager.instance.uid).set(initialUserData).catchError((error) {
+      print("Error setting the document $error");
+    });
   }
 
   bool get hasDisplayName =>
