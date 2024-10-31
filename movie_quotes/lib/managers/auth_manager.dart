@@ -11,8 +11,8 @@ class AuthManager {
   StreamSubscription? _authSubcription;
   User? _user;
 
-  Map<UniqueKey, Function> _loginObservers = {};
-  Map<UniqueKey, Function> _logoutObservers = {};
+  final Map<UniqueKey, Function> _loginObservers = {};
+  final Map<UniqueKey, Function> _logoutObservers = {};
 
   void beginListening() {
     if (_authSubcription != null) {

@@ -1,9 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_ui_storage/firebase_ui_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_quotes/model/movie_quote.dart';
-import 'package:movie_quotes/pages/login_front_page.dart';
-import 'package:movie_quotes/pages/movie_quote_detail_page.dart';
 import 'package:movie_quotes/pages/movie_quotes_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

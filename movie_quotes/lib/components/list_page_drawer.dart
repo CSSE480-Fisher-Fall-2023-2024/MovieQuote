@@ -56,8 +56,8 @@ class ListPageDrawer extends StatelessWidget {
             thickness: 2.0,
           ),
           ListTile(
-            title: Text("Logout"),
-            leading: Icon(Icons.logout),
+            title: const Text("Logout"),
+            leading: const Icon(Icons.logout),
             onTap: () {
               Navigator.of(context).pop();
               AuthManager.instance.signOut();

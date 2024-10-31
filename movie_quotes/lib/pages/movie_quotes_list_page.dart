@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_quotes/components/list_page_drawer.dart';
 import 'package:movie_quotes/components/movie_quote_dialog.dart';

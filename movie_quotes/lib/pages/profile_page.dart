@@ -76,8 +76,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   // extensions: ["jpg", "png", "jpeg"],
                   // mimeTypes: ["image/jpeg", "image/png"],
                   metadata: SettableMetadata(contentType: "image/jpeg"),
-                  extensions: ['jpg', 'png'],
-                  mimeTypes: ['image/jpeg', 'image/png'],
+                  extensions: const ['jpg', 'png'],
+                  mimeTypes: const ['image/jpeg', 'image/png'],
                   onError: (e, s) => ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(e.toString()),

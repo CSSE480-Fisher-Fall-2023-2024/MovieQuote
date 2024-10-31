@@ -8,7 +8,6 @@ import 'package:movie_quotes/managers/auth_manager.dart';
 import 'package:movie_quotes/managers/movie_quote_document_manager.dart';
 import 'package:movie_quotes/managers/movie_quotes_collection_manager.dart';
 import 'package:movie_quotes/managers/user_data_document_manager.dart';
-import 'package:movie_quotes/model/movie_quote.dart';
 
 class MovieQuoteDetailPage extends StatefulWidget {
   // final MovieQuote movieQuote;
